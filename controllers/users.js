@@ -11,7 +11,9 @@ async function createNewChef(req, res) {
   if (body.email && body.password && body.username && body.name && body.photoUrl && body.phoneNumber) {
 
     const usernameRef = admin.database().ref("/registeredUsernames").child(body.username)
-    const usernameExists = usernameRef.once("value", snapshot => snapshot.exists())
+    const usernameExists = new Promise(resolve => {
+      usernameRef.once("value", snapshot => resolve(snapshot.exists()))
+    })
     const exists = await usernameExists
 
     if (exists) {
